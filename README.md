@@ -2,7 +2,7 @@
 https://raw.githubusercontent.com/gzgicn/mibei/refs/heads/main/v2ray.txt
 
 
-#github API访问方式URL：
+#github API相应访问方式URL：
 https://api.github.com/repos/gzgicn/mibei/contents/v2ray.txt
 
 
@@ -24,4 +24,80 @@ https://api.github.com/repos/gzgicn/mibei/contents/v2ray.txt
     "git": "https://api.github.com/repos/gzgicn/mibei/git/blobs/b6e62be134efc285126b9bb349e81be3e8a7819a",
     "html": "https://github.com/gzgicn/mibei/blob/main/v2ray.txt"
   }
+}
+
+
+
+#
+
+package cn.gzgi.v2ray;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Base64;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+
+
+/**
+ * 通过 GitHub API 获取文件内容，绕过部分访问限制
+ * 类名称：
+ * 功能说明：
+ * 作者:@author gzgi.cn
+ * 创建时间：2025年3月6日 上午10:42:31
+ * 版本号:V1.00.001
+ */
+public class GithubAPIDecode {
+
+    public static void main(String[] args) {
+	//https://raw.githubusercontent.com/gzgicn/mibei/refs/heads/main/v2ray.txt
+	//RAW服务被屏蔽，可用API方式访问
+        String url = "https://api.github.com/repos/gzgicn/mibei/contents/v2ray.txt";
+        String content=fetchAndDecodeJson(url);        
+        System.out.println(content);
+    }
+
+    public static String fetchAndDecodeJson(String urlString) {
+    	String decodedContent="";
+        try {        	
+            URL url = new URL(urlString);           
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");            
+            int responseCode = connection.getResponseCode();
+            if (responseCode == HttpURLConnection.HTTP_OK) {
+               
+                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String inputLine;
+                StringBuilder response = new StringBuilder();
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+              
+                JSONObject jsonData = JSON.parseObject(response.toString());
+                String content = jsonData.getString("content");
+                String encoding = jsonData.getString("encoding");
+
+                if ("base64".equals(encoding)) {
+                    // 去除换行符和其他非 Base64 字符
+                    content = content.replaceAll("\\s", "");
+                    byte[] decodedBytes = Base64.getDecoder().decode(content);
+                    decodedContent = new String(decodedBytes, "UTF-8");
+                } else {
+                	decodedContent="Unsupported encoding: " + encoding;
+                }
+            } else {
+            	decodedContent="Failed to fetch data. Response code: " + responseCode;
+            }
+                        
+        } catch (Exception e) {
+        	decodedContent="Exception: " + e.getMessage();
+        }
+        return decodedContent;
+    }
+	
+
 }
