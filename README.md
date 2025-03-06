@@ -12,7 +12,7 @@ https://api.github.com/repos/gzgicn/mibei/contents/v2ray.txt
 
 ###3.github API访问接口样式：
 
-
+```JSON
 {
   "name": "v2ray.txt",
   "path": "v2ray.txt",
@@ -36,19 +36,15 @@ https://api.github.com/repos/gzgicn/mibei/contents/v2ray.txt
 
 ###4.JAVA通过 GitHub API 获取文件内容
 
-
+```JAVA
 package cn.gzgi.v2ray;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Base64;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-
-
 /**
  * 通过 GitHub API 获取文件内容，绕过部分访问限制
  * 类名称：
