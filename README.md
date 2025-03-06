@@ -1,4 +1,4 @@
-# github API
+# github RAW服务被屏蔽，可用API方式绕过某些访问限制
 
 **1.github raw原访问URL：**
 
