@@ -1,12 +1,18 @@
-###github raw原访问URL：
+# github API
+
+###1.github raw原访问URL：
+
 https://raw.githubusercontent.com/gzgicn/mibei/refs/heads/main/v2ray.txt
 
 
-###github API相应访问方式URL：
+###2.github API相应访问方式URL：
+
 https://api.github.com/repos/gzgicn/mibei/contents/v2ray.txt
 
 
-###github API访问接口样式：
+###3.github API访问接口样式：
+
+
 {
   "name": "v2ray.txt",
   "path": "v2ray.txt",
@@ -28,7 +34,8 @@ https://api.github.com/repos/gzgicn/mibei/contents/v2ray.txt
 
 
 
-###JAVA通过 GitHub API 获取文件内容
+###4.JAVA通过 GitHub API 获取文件内容
+
 
 package cn.gzgi.v2ray;
 
