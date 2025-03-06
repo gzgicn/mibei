@@ -44,29 +44,49 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Base64;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+
+
 /**
  * 通过 GitHub API 获取文件内容，绕过部分访问限制
  * 类名称：
  * 功能说明：
- * 作者:@author gzgi.cn
+ * 作者:@author Administrator
  * 创建时间：2025年3月6日 上午10:42:31
  * 版本号:V1.00.001
  */
 public class GithubAPIDecode {
 
-    public static void main(String[] args) {
-	//https://raw.githubusercontent.com/gzgicn/mibei/refs/heads/main/v2ray.txt
-	//RAW服务被屏蔽，可用API方式访问
-        String url = "https://api.github.com/repos/gzgicn/mibei/contents/v2ray.txt";
+	public static void main(String[] args) {
+        String url="https://raw.githubusercontent.com/gzgicn/TVBox/refs/heads/main/tv/5/liucn.json";       
+        //url="https://api.github.com/repos/gzgicn/TVBox/contents/tv/5/liucn.json";
         String content=fetchAndDecodeJson(url);        
         System.out.println(content);
     }
 
+
+    public static String convertRawToApiUrl(String rawUrl) {
+    	if(rawUrl.indexOf("https://raw")>-1){
+	        return rawUrl.replaceAll(
+	            "^https://raw\\.githubusercontent\\.com/([^/]+)/([^/]+)/refs/heads/([^/]+)/(.+)$",
+	            "https://api.github.com/repos/$1/$2/contents/$4");
+        
+    	}else{
+    		return rawUrl;
+    	}
+    }
+
     public static String fetchAndDecodeJson(String urlString) {
     	String decodedContent="";
-        try {        	
+        try {        
+        	System.out.println("原来的URL:"+urlString);        	
+        	//RAW服务被屏蔽，可用API方式访问
+        	urlString=convertRawToApiUrl(urlString);
+            System.out.println("转换后URL:"+urlString);
+
+        	
             URL url = new URL(urlString);           
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");            
@@ -80,6 +100,7 @@ public class GithubAPIDecode {
                     response.append(inputLine);
                 }
                 in.close();
+
               
                 JSONObject jsonData = JSON.parseObject(response.toString());
                 String content = jsonData.getString("content");
@@ -101,7 +122,6 @@ public class GithubAPIDecode {
         	decodedContent="Exception: " + e.getMessage();
         }
         return decodedContent;
-    }	
-
+    }
 }
 ```
